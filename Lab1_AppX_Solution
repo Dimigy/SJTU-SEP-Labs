@@ -1,0 +1,9 @@
+此文件为对Lab1-AppX的解析与探讨
+(1)类的三大机制：组合继承多态
+这三大机制的顺序固定，组合是继承的基类初始化基础，继承是多态的基础。
+Lab1中一共有5+1个类：Student|Graduate|Undergraduate|StudentWrapper|Class|AppX
+Student类是Graduate类与Undergraduate类的基类，同时Student类对象是StudentWrapper类的私有数据成员（组合），Student类与Class类没有直接的关系，Student类通过StudentWrapper类与Class类进行组合，Student类与AppX类组合并且作为studentVec内派生类对象的公共基类利用迭代器（其实就是指针）实现多态
+Graduate类是Student类的派生类（继承）
+Undergraduate类是Student类的派生类（继承）
+StudentWrapper类是一个中间类，内部与Student类组合，外部与Class类组合
+Class类对象地址是Student类的私有数据成员classes的表内元素，这也是一个组合
