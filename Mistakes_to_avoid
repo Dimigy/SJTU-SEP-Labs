@@ -1,0 +1,63 @@
+In this file,we will talk about some common mistakes you should get aware of and avoid.
+1.Which IDE should you apply?
+Although it is usually acceptable to use IDE you're already familiar with,you'd better follow lab1.pdf and use Clion to accomplish this lab.
+Because in lab1,there is a function called loadFiles,
+it can open relevant documents(Students.txt and Classes.txt) and upload them into studentVec and classVec.
+The file stream object in it is initialized with the "relative file path".(you can not change it into absolute file path because it need to be tested in other platforms)
+Different IDE has different rules to define the exact position of "relative file path" in its working directory.
+In Microsoft Visual Studio 2022,if your Students.txt and Classes.txt are put in the same directory as the program file(such as main.cc,Student.h,etc),
+the compiler of MVS won't be able to open these two text files,
+the studentVec and classVec will stay empty.
+At this time,the most common phenomenon is that when you try to input scores and just finish inputing classname,you will receive "No Match Class" error.
+It is hard and complex to set the working directory to "..\" we need,which brings us inconvenience.
+But in Clion,it is much easier to set working directory to "..\"
+so,you'd better apply Clion.You can see the specific way to set working directory to "..\" in lab1.pdf.
+
+2.Initialization of Student class and Class class
+When you first try to code the constructor of these two classes,it is natural to initialize all the data members in your mind.
+But do you notice that there is an addClass function in Student and an addStudent function in Class?
+You should initialize them with these 2 functions in loadFile,not with constructor in their own head files.
+
+When you realize that the private data member:classes and students,should not be initialized in constructor,
+you will know that you should only initialize the rest data members,but pay attention to the qualifier in the front of them:"const"
+const data member only has two ways to initialize:
+1.for const int data member,you can initialize it when you declare it.Just like:
+const int point=1;  //legal way to initialize const int
+but for other types,it is illegal:
+const double point=1.0  //illegal
+2.for all the const data member,you can initialize them in the initialization list in constructor,just like:
+Student(const std::string& id,const std::string& name,const std::string& year):id(id),name(name),year(year){};  //legal
+
+3.Initialization of StudentWrapper class
+/*
+const Student& student;  //combination
+StudentWrapper(const std::string& id,const Student& student):id(id),student(student){};
+*/
+due to the combination with Student,you must code the copy constructor of Student and call it in StudentWrapper constructor's initialization list.
+you should consider both "const" and "combination"
+
+4.How to save scores in scores.txt?
+As we know in Lab1_AppX_Solution,there are two functions relevant to save scores
+1.void Class::saveScore(const std::string& scores);
+2.void AppX::saveScore(const std::string& scores);
+function 2 calls function 1 in a loop.
+So,scores.txt will be opened and closed for many times.
+If we just use std::ofstream ofs(filename) to open it,we will clear all the contents that are written in when we opened it last time.
+So,we must apply:std::ofstream ofs(filename,std::ios::app) to open it to store all the written-in record.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
