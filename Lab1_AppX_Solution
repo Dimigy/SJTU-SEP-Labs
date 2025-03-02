@@ -80,9 +80,57 @@ Fifthly,AppX's inputScore function reads the classname user inputs.
 and find out whether there is such class in classVec.
 If there is the right class,inputScore function continue to read id and scores.
 If not,inputScore function use std::cerr to report an error:No Match Class!
-And then return back to the formal step:reads the next classname. 
+And then return back to the former step:reads the next classname. 
 
 If inputScore reads the right classname:
 It will read id and scores user inputs,
 and then uses id to find the corresponding student.
-If this student exists,use setScore in StudentWrapper to initialize this student's score.
+If this student exists,it will use this id to get the corresponding StudentWrapper,
+then use setScore in StudentWrapper to initialize this student's score.
+(only StudentWrapper obj can store student's scores)
+If this student does not exist,it will use std::cerr to report an error:No Match Student!
+And then return back the former step:reads the next id and scores.
+
+Sixthly,AppX's printScoreStats function will get the classname and check whether this class exists in classVec.
+If the class does not exist,it will throw an error to be catched:No Match Class!
+If the class exists,it will call the three functions:
+1.double getHighestScore();
+2.double getLowestScore();
+3.double getAvgScore();
+they will traverse this class(Class obj)'s private data member,
+std::vector<StudentWrapper> students,to traverse each student's score and check its legality.
+If the student's score is between [0,100],then it counts.
+If the student's score is -1(means illegal scores,agreed in advance),then skip it.
+If every student's score is illegal,throw:"No Valid Score!"
+Otherwise,throw the legal scores.
+
+Seventhly,AppX's printGrade function will get the student's id and check whether this student exists in studentVec.
+If the student does not exist,throw:"No Match Student!"
+else it will call the two functions in Graduate/Undergraduate:
+1.double getGpa();
+2.double getAvgScore();
+they will traverse this student(Graduate/Undergraduate obj)'s private data member,
+std::vector<Class*> classes,to traverse each class and call getStudentWrapper in Class to check scores and legality.
+If the student's score is between [0,100],then it counts,so does the gpa.
+If the student's score is -1(means illegal scores,agreed in advance),then skip it.
+If every student's score is illegal,return 0.0
+Otherwise,throw the legal scores and gpa.
+Graduate and Undergraduate obj have different methods to get their gpa.
+This can reflect the Polymorphic between different derived classes.
+
+Eighthly,AppX's saveScore function will set down all the classes and their students' id and scores.
+It will traverse each class in vector<Class*>classVec with an iterator and for each of class,
+call its own save function:saveScore in Class.
+As the traverse ends,each class and its student id and scores are save in scores.txt.
+
+Attention:if the student wants to know its score,it has to find Class obj at std::vector<Class*> classes at first,
+then calls the Class obj's getStudentWrapper at second,
+and calls getScore in StudentWrapper at last
+Only StudentWrapper obj has scores.
+
+
+This is the entire working process and principles of the AppX.
+I hope this will help you understand the whole process and learn how to code.
+
+/***END***/
+
