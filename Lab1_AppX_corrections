@@ -1,0 +1,4 @@
+IN the original lab1.zip
+there are two errors in it,we should correct them:
+1.In StudentWrapper,the private data member "score" should be initialized with -1(negative one);
+2.you should include <fstream> in Class.cc
