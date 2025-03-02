@@ -1,9 +1,88 @@
-此文件为对Lab1-AppX的解析与探讨
-(1)类的三大机制：组合继承多态
-这三大机制的顺序固定，组合是继承的基类初始化基础，继承是多态的基础。
-Lab1中一共有5+1个类：Student|Graduate|Undergraduate|StudentWrapper|Class|AppX
-Student类是Graduate类与Undergraduate类的基类，同时Student类对象是StudentWrapper类的私有数据成员（组合），Student类与Class类没有直接的关系，Student类通过StudentWrapper类与Class类进行组合，Student类与AppX类组合并且作为studentVec内派生类对象的公共基类利用迭代器（其实就是指针）实现多态
-Graduate类是Student类的派生类（继承）
-Undergraduate类是Student类的派生类（继承）
-StudentWrapper类是一个中间类，内部与Student类组合，外部与Class类组合
-Class类对象地址是Student类的私有数据成员classes的表内元素，这也是一个组合
+This document is the explanation and discussion of Lab1_AppX:
+(1)Three classic class features:Combination,Inheritance,Polymorphic
+their orders are fixed:combination is the basic of inheritance,and inheritance is the basic of polymorphic
+
+there are totally 5+1 classes in Lab1:
+Student|Graduate|Undergraduate|StudentWrapper|Class|AppX
+
+Let's talk about their relationships:
+1.Student
+Student is the base class of Graduate and Undergraduate.(Inheritance)
+
+Student is the private data member of StudentWrapper.(Combination)
+
+Student is a formal parameter of Class's member function.
+It has no direct relationship with Class.The bridge connected between them is StudentWapper.
+
+Student's address is the element in AppX's private data member:vector<Students*> studentVec.
+AppX uses Student* to accomplish polymorphic(Polymorphic)
+
+Besides,Student is an abstract class which can not instantiate.(Abstract Class)
+there is no Student obj.
+Graduate and Undergraduate obj have Student obj part and can work as a Student obj.
+
+2.Graduate
+Graduate is a derived class from Student.(Inheritance)
+
+Graduate has the same status in lab1_AppX as Undergraduate.
+
+Graduate is a derived class from Student and is not Students itself,
+but when the formal parameter is Student obj or its quote,Graduate obj can still be the actual parameter.
+the function will use the base class part of the derived class.
+We can use Graduate obj to initialise a StudentWrapper obj.
+
+Graduate can be the actual parameter of Class' member function.
+It has no direct relationship with Class.The bridge connected between them is StudentWrapper.
+
+Graduate is the actual element in AppX's private data member:vactor<Student*> studentVec.
+AppX uses the pointer pointing at the Student part in Graduate to accomplish polymorphic.
+
+3.Undergraduate
+Totally same as Graduate.
+
+4.StudentWrapper
+StudentWrapper accept both Graduate and Undergraduate obj as its initialisation parameter.
+
+StudentWrapper is the element in Class's private data member:vector<StudentWrapper> students.
+
+5.Class
+Class maybe take Graduate obj or Undergraduate obj to form a StudentWrapper.
+But storing StudentWrapper obj is the only way to store student information in Class.
+In a word,Class doesn't know the student degree
+Class only knows each student's id and score of this class.
+
+6.AppX
+AppX integrates all the classes above.
+It interacts with the user directly.
+
+(2)Working principles
+this lab works in the following routine:
+
+First,you should put the Students.txt and Classes.txt in the working directory of the program.
+
+Second,AppX's constructor function automatically call the loadFiles function.
+loadFiles function reads the information of Students.txt and Classes.txt.
+
+Thirdly,loadFiles function use the information in Students.txt to form Graduate obj or Undergraduate obj.
+And then push them into the studentVec.
+
+Fourly,loadFiles function use the information:classname and point in Classes.txt to form new Class.
+And push them into the classVec.
+And loadFiles use the id of student list in Classes.txt to do 3 things:
+(1)to find whether there is the corresponding student in studentVec(it has got fully initialized) or not by id.
+(2)if the corresponding student exists,calls the addStudent function(it accepts Student&) in Class to add this student.
+This initializes the Class's private data member:students.
+And calls the addClass function (It accepts Class*) in Student to add this class.
+This initializes the Student's private data member:classes.
+(3)if the corresponding student does not exist,do nothing(ignore)
+
+Fifthly,AppX's inputScore function reads the classname user inputs.
+and find out whether there is such class in classVec.
+If there is the right class,inputScore function continue to read id and scores.
+If not,inputScore function use std::cerr to report an error:No Match Class!
+And then return back to the formal step:reads the next classname. 
+
+If inputScore reads the right classname:
+It will read id and scores user inputs,
+and then uses id to find the corresponding student.
+If this student exists,use setScore in StudentWrapper to initialize this student's score.
